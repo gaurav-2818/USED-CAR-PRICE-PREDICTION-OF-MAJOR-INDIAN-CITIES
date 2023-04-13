@@ -1,0 +1,409 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0fc10564",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "093e9020",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "C:\\Users\\User\\AppData\\Local\\Temp\\ipykernel_34820\\3318699017.py:11: DeprecationWarning: executable_path has been deprecated, please pass in a Service object\n",
+      "  driver = webdriver.Chrome(executable_path=ChromeDriverManager().install())\n"
+     ]
+    }
+   ],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "ffef5c1c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "Name=[]\n",
+    "Location=[]\n",
+    "car_detail=[]\n",
+    "Fuel_Type=[]\n",
+    "Transmission=[]\n",
+    "Owner_Type=[]\n",
+    "Engine_CC=[]\n",
+    "Power=[]\n",
+    "Seats=[]\n",
+    "Mileage=[]\n",
+    "Price=[]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "290d8115",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "[WDM] - Downloading: 100%|█████████████████████████████████████████████████████████| 6.80M/6.80M [00:15<00:00, 472kB/s]\n",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\ipykernel_11940\\1188685129.py:25: DeprecationWarning: executable_path has been deprecated, please pass in a Service object\n",
+      "  driver = webdriver.Chrome(executable_path=ChromeDriverManager().install())\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "found 40 cars\n",
+      "Fetched details of 1 th car\n",
+      "Fetched details of 2 th car\n",
+      "Fetched details of 3 th car\n",
+      "Fetched details of 4 th car\n",
+      "Fetched details of 5 th car\n",
+      "Fetched details of 6 th car\n",
+      "Fetched details of 7 th car\n",
+      "Fetched details of 8 th car\n",
+      "Fetched details of 9 th car\n"
+     ]
+    }
+   ],
+   "source": [
+    "from selenium import webdriver\n",
+    "from selenium.webdriver.common.by import By\n",
+    "from selenium.webdriver.support.ui import WebDriverWait\n",
+    "from selenium.webdriver.support import expected_conditions as EC\n",
+    "from selenium import webdriver\n",
+    "from bs4 import BeautifulSoup\n",
+    "from selenium import webdriver\n",
+    "from bs4 import BeautifulSoup\n",
+    "import time\n",
+    "from webdriver_manager.chrome import ChromeDriverManager\n",
+    "from selenium import webdriver\n",
+    "from selenium.webdriver.common.by import By\n",
+    "from selenium.webdriver import Chrome\n",
+    "from selenium.webdriver.support.ui import WebDriverWait\n",
+    "from selenium.webdriver.support import expected_conditions as EC\n",
+    "from bs4 import BeautifulSoup\n",
+    "from selenium.common.exceptions import NoSuchElementException,ElementClickInterceptedException,TimeoutException\n",
+    "from selenium.webdriver.common.action_chains import ActionChains\n",
+    "from selenium.common.exceptions import StaleElementReferenceException\n",
+    "from selenium.common.exceptions import NoSuchElementException, WebDriverException\n",
+    "# set up the driver\n",
+    "options = webdriver.ChromeOptions()\n",
+    "options.add_argument(\"--start-maximized\")\n",
+    "# Initialize web driver and open the Cars24 website\n",
+    "driver = webdriver.Chrome(executable_path=ChromeDriverManager().install())\n",
+    "driver.get('https://www.cardekho.com/used-cars+in+jaipur')\n",
+    "time.sleep(35)\n",
+    "# Wait for the page to load\n",
+    "wait = WebDriverWait(driver, 10)\n",
+    "\n",
+    "\"\"\"# Find all elements with the class name 'title'\n",
+    "elements = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'title')))\n",
+    "\n",
+    "# Extract the text content of each element\n",
+    "for element in elements:\n",
+    "    print(element.text)\"\"\"\n",
+    "elements = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'title')))\n",
+    "print('found',len(elements),'cars')\n",
+    "for a in range(1,10):\n",
+    "    try:\n",
+    "        # Click on the element\n",
+    "        elements[a].click()\n",
+    "        time.sleep(4)\n",
+    "        # Perform any necessary actions after clicking, e.g. wait for page load, perform action, etc.\n",
+    "        html=driver.page_source\n",
+    "        soup5 = BeautifulSoup(driver.page_source, \"html.parser\")\n",
+    "        for i in soup5.find_all(class_='vehicleName'):\n",
+    "            Name.append(i.text.strip())\n",
+    "        \n",
+    "        for i in soup5.find_all(class_='vehicleDotList'):\n",
+    "            car_detail.append(i.text.strip())\n",
+    "        \n",
+    "        spec_list = soup5.find_all('div', class_='outer-card-container specsCard')    \n",
+    "        for spec in spec_list:\n",
+    "            labels = spec.find_all('div', class_='label')\n",
+    "            values = spec.find_all('span', class_='value-text')\n",
+    "            for label, value in zip(labels, values):\n",
+    "                label_text = label.text.strip()\n",
+    "                value_text = value.text.strip()\n",
+    "                if label_text == \"Mileage\":\n",
+    "                    Mileage.append(value_text)\n",
+    "                elif label_text == \"Engine\":\n",
+    "                    Engine_CC.append(value_text)\n",
+    "                elif label_text == \"Max Power\":\n",
+    "                    Power.append(value_text)\n",
+    "                elif label_text == \"Seats\":\n",
+    "                    Seats.append(value_text)\n",
+    "        b=soup5.find('div', class_='cityTextBox').input['value']\n",
+    "        Location.append(b)\n",
+    "        for i in soup5.find_all(class_='vehiclePrice'):\n",
+    "            Price.append(i.text.strip())\n",
+    "        # Navigate back to the previous page\n",
+    "        driver.back()\n",
+    "        time.sleep(3)\n",
+    "        # Re-locate the elements after navigating back to the previous page\n",
+    "        elements = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'title')))\n",
+    "    except StaleElementReferenceException:\n",
+    "        # If element becomes stale, locate it again\n",
+    "        elements = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'title')))\n",
+    "        elements[a].click()\n",
+    "        time.sleep(5)\n",
+    "        driver.back()\n",
+    "    except ElementClickInterceptedException as e:\n",
+    "            print(\"Error: ElementClickInterceptedException -\")\n",
+    "            time.sleep(10)        \n",
+    "    print(\"Fetched details of\",a,'th car')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "24652278",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['2015 Maruti Swift VXI', '2022 Maruti Celerio ZXI Plus', '2019 Maruti Celerio ZXI MT BSIV', '2021 MG Gloster Sharp 7-Str', '2015 Maruti Celerio ZXI AT', '2018 Maruti Celerio ZXI AMT BSIV', '2021 Hyundai Verna SX IVT', '2016 Land Rover Discovery Sport TD4 SE 7S', '2022 Skoda Slavia 1.0 TSI Active']\n",
+      "['Jaipur', 'Jaipur', 'Jaipur', 'Jaipur', 'Jaipur', 'Jaipur', 'Jaipur', 'Jaipur', 'Jaipur']\n",
+      "['60,523 kms • Petrol • Manual • 1st Owner', '8,855 kms • Petrol • Manual • 1st Owner', '38,421 kms • Petrol • Manual • 1st Owner', '80,000 kms • Diesel • Automatic • 1st Owner', '31,924 kms • Petrol • Automatic • 1st Owner', '49,068 kms • Petrol • Automatic • 1st Owner', '33,706 kms • Petrol • Automatic • 1st Owner', '67,000 kms • Diesel • Automatic • 1st Owner', '13,978 kms • Petrol • Manual • 1st Owner']\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(Name)\n",
+    "print(Location)\n",
+    "print(car_detail)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "e116e5a9",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "9\n",
+      "9\n",
+      "9\n",
+      "9\n",
+      "9\n",
+      "9\n",
+      "9\n",
+      "9\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(len(Name))\n",
+    "print(len(car_detail))\n",
+    "print(len(Power))\n",
+    "print(len(Location))\n",
+    "print(len(Mileage))\n",
+    "print(len(Seats))\n",
+    "print(len(Engine_CC))\n",
+    "print(len(Price))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "806abce6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "1e422f61",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df = pd.DataFrame({'Name': Name,\n",
+    "                   'Location': Location,\n",
+    "                   'CarDetail': car_detail,\n",
+    "                   'Engine CC': Engine_CC,\n",
+    "                   'Power': Power,\n",
+    "                   'Seats': Seats,\n",
+    "                   'Mileage Km/L': Mileage,\n",
+    "                   'Price': Price})"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "a1f78421",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Name</th>\n",
+       "      <th>Location</th>\n",
+       "      <th>CarDetail</th>\n",
+       "      <th>Engine CC</th>\n",
+       "      <th>Power</th>\n",
+       "      <th>Seats</th>\n",
+       "      <th>Mileage Km/L</th>\n",
+       "      <th>Price</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2015 Maruti Swift VXI</td>\n",
+       "      <td>Jaipur</td>\n",
+       "      <td>60,523 kms • Petrol • Manual • 1st Owner</td>\n",
+       "      <td>1197 CC</td>\n",
+       "      <td>81.80bhp</td>\n",
+       "      <td>5</td>\n",
+       "      <td>21.21 kmpl</td>\n",
+       "      <td>₹ 5.06 Lakh</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2022 Maruti Celerio ZXI Plus</td>\n",
+       "      <td>Jaipur</td>\n",
+       "      <td>8,855 kms • Petrol • Manual • 1st Owner</td>\n",
+       "      <td>998 CC</td>\n",
+       "      <td>65.71bhp</td>\n",
+       "      <td>5</td>\n",
+       "      <td>24.97 kmpl</td>\n",
+       "      <td>₹ 6.64 Lakh</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2019 Maruti Celerio ZXI MT BSIV</td>\n",
+       "      <td>Jaipur</td>\n",
+       "      <td>38,421 kms • Petrol • Manual • 1st Owner</td>\n",
+       "      <td>998 CC</td>\n",
+       "      <td>67.04bhp</td>\n",
+       "      <td>5</td>\n",
+       "      <td>23.1 kmpl</td>\n",
+       "      <td>₹ 4.93 Lakh</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>2021 MG Gloster Sharp 7-Str</td>\n",
+       "      <td>Jaipur</td>\n",
+       "      <td>80,000 kms • Diesel • Automatic • 1st Owner</td>\n",
+       "      <td>1996 CC</td>\n",
+       "      <td>215.01bhp</td>\n",
+       "      <td>7</td>\n",
+       "      <td>12.4 kmpl</td>\n",
+       "      <td>₹ 34.50 Lakh</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>2015 Maruti Celerio ZXI AT</td>\n",
+       "      <td>Jaipur</td>\n",
+       "      <td>31,924 kms • Petrol • Automatic • 1st Owner</td>\n",
+       "      <td>998 CC</td>\n",
+       "      <td>67.04bhp</td>\n",
+       "      <td>5</td>\n",
+       "      <td>23.1 kmpl</td>\n",
+       "      <td>₹ 4.11 Lakh</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                              Name Location  \\\n",
+       "0            2015 Maruti Swift VXI   Jaipur   \n",
+       "1     2022 Maruti Celerio ZXI Plus   Jaipur   \n",
+       "2  2019 Maruti Celerio ZXI MT BSIV   Jaipur   \n",
+       "3      2021 MG Gloster Sharp 7-Str   Jaipur   \n",
+       "4       2015 Maruti Celerio ZXI AT   Jaipur   \n",
+       "\n",
+       "                                     CarDetail Engine CC      Power Seats  \\\n",
+       "0     60,523 kms • Petrol • Manual • 1st Owner   1197 CC   81.80bhp     5   \n",
+       "1      8,855 kms • Petrol • Manual • 1st Owner    998 CC   65.71bhp     5   \n",
+       "2     38,421 kms • Petrol • Manual • 1st Owner    998 CC   67.04bhp     5   \n",
+       "3  80,000 kms • Diesel • Automatic • 1st Owner   1996 CC  215.01bhp     7   \n",
+       "4  31,924 kms • Petrol • Automatic • 1st Owner    998 CC   67.04bhp     5   \n",
+       "\n",
+       "  Mileage Km/L         Price  \n",
+       "0   21.21 kmpl   ₹ 5.06 Lakh  \n",
+       "1   24.97 kmpl   ₹ 6.64 Lakh  \n",
+       "2    23.1 kmpl   ₹ 4.93 Lakh  \n",
+       "3    12.4 kmpl  ₹ 34.50 Lakh  \n",
+       "4    23.1 kmpl   ₹ 4.11 Lakh  "
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "abe298ff",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
